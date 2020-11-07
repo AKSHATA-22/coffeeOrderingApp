@@ -1,2 +1,2 @@
 # coffeeOrderingApp
-An basic app taking input from user 
+An app taking input from user 
