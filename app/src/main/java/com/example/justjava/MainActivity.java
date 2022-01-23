@@ -10,6 +10,7 @@ package com.example.justjava;
 
 
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -39,25 +40,43 @@ public class MainActivity extends AppCompatActivity {
      */
     public void submitOrder(View view) {
 
+        EditText name = findViewById(R.id.name_view);
+        String nme = name.getText().toString();
+        if (nme.isEmpty()){
+            Context context = getApplicationContext();
+            Toast toast = Toast.makeText(context, "Enter a name", Toast.LENGTH_SHORT);
+            toast.show();
+            setContentView(R.layout.activity_main);
+            return;
+        }
         CheckBox whippedCreme = findViewById(R.id.whipped_check);
         boolean hasChecked= whippedCreme.isChecked();
         CheckBox chocolate = findViewById(R.id.chocolate_checkbox);
         boolean hasChChecked = chocolate.isChecked();
-        EditText name = findViewById(R.id.name_view);
-        String nme = name.getText().toString();
-      //  display(quantity);
+//        display(quantity);
         String priceMessage ;
         int price=calculatePrice(quantity,hasChecked , hasChChecked);
         priceMessage = createOrderSummary(price, hasChecked , hasChChecked, nme);
 
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
-        intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
-        intent.putExtra(Intent.EXTRA_SUBJECT, "Order from Just Java App");
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        }
-        //displayPrice(priceMessage);
+        displayMessage(priceMessage);
+        findViewById(R.id.next_button).setEnabled(false);
+        findViewById(R.id.reorder_button).setEnabled(true);
+//        Intent intent = new Intent(Intent.ACTION_SENDTO);
+//        intent.setData(Uri.parse("mailto:")); // only email apps should handle this
+//        intent.putExtra(Intent.EXTRA_TEXT, priceMessage);
+//        intent.putExtra(Intent.EXTRA_SUBJECT, "Order from Just Java App");
+//        if (intent.resolveActivity(getPackageManager()) != null) {
+//            startActivity(intent);
+//        }
+//        display(priceMessage);
+    }
+
+    public void resubmitOrder(View view){
+
+        setContentView(R.layout.activity_main);
+        findViewById(R.id.next_button).setEnabled(true);
+        findViewById(R.id.reorder_button).setEnabled(false);
+
     }
 
     private String createOrderSummary(int price, boolean hasChecked , boolean hasChChecked, String nme) {
@@ -86,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         quantity--;
         display(quantity);
 
-      //  displayPrice(quantity*5);
+//        displayPrice(quantity*5);
     }
     /**
      * This method displays the given quantity value on the screen.
@@ -94,6 +113,11 @@ public class MainActivity extends AppCompatActivity {
     private void display(int number) {
         TextView quantityTextView = (TextView) findViewById(R.id.quantity_text_view);
         quantityTextView.setText("" + number);
+    }
+
+    private void displayMessage(String message) {
+        TextView quantityTextView = (TextView) findViewById(R.id.message_text_view);
+        quantityTextView.append("\n" + message);
     }
     /**
      * This method displays the given price on the screen.
