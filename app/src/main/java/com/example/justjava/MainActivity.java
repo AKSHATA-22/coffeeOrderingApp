@@ -10,29 +10,36 @@ package com.example.justjava;
 
 
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
+
+import android.provider.BaseColumns;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import java.text.NumberFormat;
 
 /**
  * This app displays an order form to order coffee.
  */
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
     }
+    databaseHelper dbHelper = new databaseHelper(MainActivity.this);
     int quantity=2;
 
     /**
@@ -80,7 +87,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private String createOrderSummary(int price, boolean hasChecked , boolean hasChChecked, String nme) {
-        return "Name : "+ nme +"\nQuantity "+ quantity+"\nAdd Whipped creme: "+hasChecked+"\nAdd Chocolate Topping: "+hasChChecked+"\nTotal : "+price+"\nThank You!!";
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+// Create a new map of values, where column names are the keys
+        ContentValues values = new ContentValues();
+        values.put(databaseHelper.FeedEntry.chocolate, hasChChecked);
+        values.put(databaseHelper.FeedEntry.name, nme);
+        values.put(databaseHelper.FeedEntry.quantity, quantity);
+        values.put(databaseHelper.FeedEntry.total, price);
+        values.put(databaseHelper.FeedEntry.whippedCreme, hasChecked);
+
+// Insert the new row, returning the primary key value of the new row
+        long newRowId = db.insert(databaseHelper.FeedEntry.TABLE_NAME, null, values);
+
+        Order order = new Order(quantity, nme,hasChecked, hasChChecked,price);
+
+        return order.toString();
     }
 
     /** increment by one
@@ -135,5 +157,12 @@ public class MainActivity extends AppCompatActivity {
             price=price+1;
         price = quantity * price;
         return price;
+    }
+
+    public void displayDatabase(View view){
+        Intent intent = new Intent(MainActivity.this, DatabaseDisplay2.class);
+
+        // start the activity connect to the specified class
+        startActivity(intent);
     }
 }

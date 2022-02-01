@@ -52,9 +52,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-light"
-
         android:text="QUANTITY"
-
         android:padding="16dp"
         android:textColor="@android:color/darker_gray"
         android:textSize="16sp"/>
@@ -124,8 +122,23 @@
         android:text="Order Summary : "
         android:textColor="@android:color/black"
         android:textSize="18sp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_horizontal|center"
+        tools:context=".MainActivity">
 
-
+        <Button
+            android:id="@+id/display_database"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center"
+            android:layout_marginLeft="16dp"
+            android:onClick="displayDatabase"
+            android:text="All Orders" />
+    </LinearLayout>>
 </LinearLayout>
+
 
 </ScrollView>
